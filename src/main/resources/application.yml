@@ -1,8 +1,13 @@
 server:
   port: 80
+web:
+  printTablePath: D:/WorkStation/ihc/printTablePath/
 spring:
-  datasource:
-    driver-class-name: com.mysql.jdbc.Driver
-    username: root
-    password: root
-    url: jdbc:mysql://localhost:3306/ihc_dev?useSSL=true
+  mvc:
+    static-path-pattern: /**
+# 加入所有静态资源路径（覆盖默认配置）
+  resources:
+    static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/json/,classpath:/public/,file:${web.printTablePath}
+#  启动模式（java -jar ihc-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev）
+  profiles:
+    active: dev
