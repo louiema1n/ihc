@@ -15,6 +15,13 @@ public interface UserMapper {
 
     @Select("select id," +
             "username," +
+            "nick," +
+            "email," +
+            "remark from user where nick = #{nick}")
+    User selectByNick(@Param("nick") String nick);
+
+    @Select("select id," +
+            "username," +
             "password," + 
             "nick," +
             "email," +

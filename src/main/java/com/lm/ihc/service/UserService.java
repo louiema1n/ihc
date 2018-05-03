@@ -14,9 +14,10 @@ public class UserService {
     public User queryByUsername(String username) {
         return this.userMapper.selectByUsername(username);
     }
+    public User queryByNick(String nick) {
+        return this.userMapper.selectByNick(nick);
+    }
     public User queryPwdByUsername(String username) {
         return this.userMapper.selectPwdByUsername(username);
     }
-
-
 }
