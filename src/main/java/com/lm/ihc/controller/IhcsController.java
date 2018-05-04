@@ -104,28 +104,58 @@ public class IhcsController {
             if (sheet != null) {
                 // Ihcs集合
                 List<Ihcs> ihcsList = new ArrayList<>();
-                for (int i = 4; i < sheet.getLastRowNum() - 1; i++) {
+                XSSFRow row;
+                Ihcs ihcs;
+                String prjName, testNo, userNick, results;
+                int prjNameIndex = 0, testNoIndex = 0, timeIndex = 0, userNickIndex = 0, resultsIndex = 0;
+                for (int i = 3; i < sheet.getLastRowNum() - 1; i++) {
                     // 获取row
-                    XSSFRow row = sheet.getRow(i);
+                    row = sheet.getRow(i);
+
+                    // 使用标题行获取相应的index
+                    if (i == 3) {
+                        // 获取相应index
+                        for (int j = 0; j < row.getPhysicalNumberOfCells(); j++) {
+                            switch (row.getCell(j).getStringCellValue()) {
+                                case "项目名称":
+                                    prjNameIndex = j;
+                                    break;
+                                case "蜡块编号":
+                                    testNoIndex = j;
+                                    break;
+                                case "确认加做时间":
+                                    timeIndex = j;
+                                    break;
+                                case "确认加做人":
+                                    userNickIndex = j;
+                                    break;
+                                case "诊断意见":
+                                    resultsIndex = j;
+                                    break;
+
+                            }
+                        }
+                        continue;
+                    }
 
                     // 获取对象
-                    Ihcs ihcs = new Ihcs();
+                    ihcs = new Ihcs();
 
-                    String prjName = row.getCell(2).getStringCellValue();
+                    prjName = row.getCell(prjNameIndex).getStringCellValue();
                     ihcs.setTotal(IhcsUtil.formatTotal(prjName));    // 项目名称
 
-                    String testNo = row.getCell(4).getStringCellValue();    // 蜡块编号
+                    testNo = row.getCell(testNoIndex).getStringCellValue();    // 蜡块编号
                     // 格式化蜡块编号
                     ihcs.setNumber(IhcsUtil.getNumber(testNo));
                     ihcs.setSon(IhcsUtil.getSon(testNo));
 
-                    ihcs.setTime(Timestamp.valueOf(row.getCell(9).getStringCellValue()));// 确认加做时间
+                    ihcs.setTime(Timestamp.valueOf(row.getCell(timeIndex).getStringCellValue()));// 确认加做时间
 
-                    String userNick = row.getCell(10).getStringCellValue();// 确认加做人
+                    userNick = row.getCell(userNickIndex).getStringCellValue();// 确认加做人
                     // 获取userid
                     ihcs.setUserid(this.userService.queryByNick(userNick).getId());
 
-                    String results = row.getCell(12).getStringCellValue();// 诊断意见
+                    results = row.getCell(resultsIndex).getStringCellValue().trim();// 诊断意见
                     ihcs.setItem(IhcsUtil.getItems(results));
 
                     // 默认正常
@@ -135,8 +165,8 @@ public class IhcsController {
                     ihcsList.add(ihcs);
                 }
                 // 导入数据库
-                for (Ihcs ihcs : ihcsList) {
-                    this.ihcsService.addOne(ihcs);
+                for (Ihcs ihc : ihcsList) {
+                    this.ihcsService.addOne(ihc);
                 }
             }
         } catch (IOException e) {
