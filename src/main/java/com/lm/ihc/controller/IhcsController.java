@@ -36,6 +36,9 @@ public class IhcsController {
     @Value("${web.printTablePath}")
     private String printTablePath;
 
+    @Value("${sub-code.guizhou}")
+    private String GUIZHOU;
+
     @CrossOrigin
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public List<Ihcs> getAll(
@@ -69,6 +72,8 @@ public class IhcsController {
     public String print(@RequestBody String printData) {
         // 格式化数据
         String result = printData.substring(11, printData.length() - 2);
+        // 转换js中的CODE
+        result = result.replaceAll("CODE", GUIZHOU);
         // 转换js中的\r\n，Java中正则表达式\\\\代表\\,\\代表\
         result = result.replaceAll("\\\\r\\\\n", "\r\n");
         // 导出到指定文件
