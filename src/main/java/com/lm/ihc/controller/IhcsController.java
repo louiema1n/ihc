@@ -4,8 +4,6 @@ import com.lm.ihc.domain.Ihcs;
 import com.lm.ihc.service.IhcsService;
 import com.lm.ihc.service.UserService;
 import com.lm.ihc.utils.IhcsUtil;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -15,8 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -85,11 +84,11 @@ public class IhcsController {
             dist.getParentFile().mkdirs();
         }
         try {
-            FileWriter fw = new FileWriter(dist);
-            fw.write(result);
-//            fw.write("12\r\n34");
-            fw.flush();
-            fw.close();
+            // 解决中文编码问题
+            OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(dist), "UTF-8");
+            out.write(result);
+            out.flush();
+            out.close();
         } catch (IOException e) {
             e.printStackTrace();
             return null;
