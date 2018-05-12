@@ -1,7 +1,7 @@
 server:
   port: 80
 web:
-  printTablePath: D:/WorkStation/ihc/printTablePath/
+  printTablePath: C:/Program Files (x86)/SMF/Files/
 #  子公司代码
 sub-code:
   guizhou: K2011011
