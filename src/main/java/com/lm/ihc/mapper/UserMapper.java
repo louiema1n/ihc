@@ -41,7 +41,7 @@ public interface UserMapper {
             "nick," +
             "email," +
             "state," +
-            "remark from user where username = #{username}")
+            "remark from user where username = #{username} and state = 1")
     User selectPwdByUsername(@Param("username") String username);
 
     @Select("select id," +

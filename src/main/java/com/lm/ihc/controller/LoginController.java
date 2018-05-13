@@ -24,7 +24,7 @@ public class LoginController {
         User dataUser = this.userService.queryPwdByUsername(user.getUsername());
 
         LoginUser loginUser = new LoginUser();
-        if (!user.getUsername().equals(dataUser.getUsername())) {
+        if (dataUser == null || !user.getUsername().equals(dataUser.getUsername())) {
             // 用户名不存在
             loginUser.setStatus(2);
         } else {
