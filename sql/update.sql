@@ -1,1 +1,0 @@
-ALTER TABLE ihcs ADD confirm varchar(255) NULL COMMENT '确认人';

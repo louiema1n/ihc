@@ -8,6 +8,15 @@ public class User {
     private String nick;
     private String email;
     private String remark;
+    private boolean state;
+
+    public boolean getState() {
+        return state;
+    }
+
+    public void setState(boolean state) {
+        this.state = state;
+    }
 
     public int getId() {
         return id;
