@@ -35,6 +35,26 @@ public interface IhcsMapper {
             "#{userid})")
     Integer insertOne(Ihcs ihcs);
 
+    @Insert("INSERT INTO ihcs(" +
+            "number," +
+            "son," +
+            "total," +
+            "item," +
+            "time," +
+            "remark," +
+            "state," +
+            "confirm)" +
+            "VALUES (" +
+            "#{number}," +
+            "#{son}," +
+            "#{total}," +
+            "#{item}," +
+            "#{time}," +
+            "#{remark}," +
+            "#{state}," +
+            "#{confirm})")
+    Integer importOne(Ihcs ihcs);
+
     @UpdateProvider(type = IhcsDaoProvider.class, method = "upd")
     Integer updOne(Ihcs ihcs);
 
@@ -63,7 +83,8 @@ public interface IhcsMapper {
             if (s != null) {
                 sql += "remark = '" + s + "', ";
             }
-            sql += "state = " + ihcs.getState();
+            sql += "state = " + ihcs.getState() + ", ";
+            sql += "userid = " + ihcs.getUserid();
 //            sql = sql.substring(0, sql.lastIndexOf(","));
             sql += " where id = " + ihcs.getId();
             return sql;
