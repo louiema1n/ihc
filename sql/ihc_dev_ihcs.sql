@@ -31,10 +31,9 @@ CREATE TABLE `ihcs` (
   `time` datetime NOT NULL COMMENT '加做时间',
   `remark` varchar(255) DEFAULT NULL COMMENT '备注',
   `state` tinyint(1) DEFAULT '1' COMMENT '状态',
-  `userid` int(11) NOT NULL COMMENT '加做人',
+  `userid` int(11) DEFAULT NULL COMMENT '加做人',
+  `confirm` varchar(255) NULL COMMENT '确认人',
   PRIMARY KEY (`id`),
-  KEY `ihcs_user_id_fk` (`userid`),
-  CONSTRAINT `ihcs_user_id_fk` FOREIGN KEY (`userid`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

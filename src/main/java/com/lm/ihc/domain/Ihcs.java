@@ -16,6 +16,15 @@ public class Ihcs {
     private String timeP;
     private String remark;
     private boolean state;
+    private String confirm;
+
+    public String getConfirm() {
+        return confirm;
+    }
+
+    public void setConfirm(String confirm) {
+        this.confirm = confirm;
+    }
 
     public boolean getState() {
         return state;

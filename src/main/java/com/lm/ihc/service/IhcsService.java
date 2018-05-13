@@ -22,6 +22,10 @@ public class IhcsService {
         return this.ihcsMapper.insertOne(ihcs);
     }
 
+    public Integer impOne(Ihcs ihcs) {
+        return this.ihcsMapper.importOne(ihcs);
+    }
+
     public Integer updOne(Ihcs ihcs) {
         return this.ihcsMapper.updOne(ihcs);
     }

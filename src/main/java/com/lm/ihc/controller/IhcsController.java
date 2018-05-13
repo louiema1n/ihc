@@ -156,8 +156,8 @@ public class IhcsController {
                     ihcs.setTime(Timestamp.valueOf(row.getCell(timeIndex).getStringCellValue()));// 确认加做时间
 
                     userNick = row.getCell(userNickIndex).getStringCellValue();// 确认加做人
-                    // 获取userid
-                    ihcs.setUserid(this.userService.queryByNick(userNick).getId());
+                    // 设置确认加做人
+                    ihcs.setConfirm(userNick);
 
                     results = row.getCell(resultsIndex).getStringCellValue().trim();// 诊断意见
                     ihcs.setItem(IhcsUtil.getItems(results));
@@ -170,7 +170,7 @@ public class IhcsController {
                 }
                 // 导入数据库
                 for (Ihcs ihc : ihcsList) {
-                    this.ihcsService.addOne(ihc);
+                    this.ihcsService.impOne(ihc);
                 }
             }
         } catch (IOException e) {
