@@ -9,7 +9,7 @@ import java.util.Date;
 public class Ihcs {
 
     private int id;
-    private int number;
+    private String number;
     private int son;
     private int total;
     private Timestamp time;
@@ -17,6 +17,33 @@ public class Ihcs {
     private String remark;
     private boolean state;
     private String confirm;
+    private String prj;
+    private String results;
+    private Boolean ismatch;
+
+    public Boolean getIsmatch() {
+        return ismatch;
+    }
+
+    public void setIsmatch(Boolean ismatch) {
+        this.ismatch = ismatch;
+    }
+
+    public String getResults() {
+        return results;
+    }
+
+    public void setResults(String results) {
+        this.results = results;
+    }
+
+    public String getPrj() {
+        return prj;
+    }
+
+    public void setPrj(String prj) {
+        this.prj = prj;
+    }
 
     public String getConfirm() {
         return confirm;
@@ -63,11 +90,11 @@ public class Ihcs {
         this.id = id;
     }
 
-    public int getNumber() {
+    public String getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(String number) {
         this.number = number;
     }
 

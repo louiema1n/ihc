@@ -14,7 +14,7 @@ public class IhcsService {
     @Autowired
     private IhcsMapper ihcsMapper;
 
-    public List<Ihcs> queryAll(String begin, String end, int searchNo) {
+    public List<Ihcs> queryAll(String begin, String end, String searchNo) {
         return this.ihcsMapper.selectAll(begin, end, searchNo);
     }
 

@@ -13,7 +13,7 @@ public interface IhcsMapper {
             @Result(property = "userid", column = "userid"),
             @Result(property = "user", column = "userid", one = @One(select = "com.lm.ihc.mapper.UserMapper.selectById"))
     })
-    List<Ihcs> selectAll(String begin, String end, int searchNo);
+    List<Ihcs> selectAll(String begin, String end, String searchNo);
 
     @Insert("INSERT INTO ihcs(" +
             "number," +
@@ -23,6 +23,7 @@ public interface IhcsMapper {
             "time," +
             "remark," +
             "state," +
+            "prj," +
             "userid)" +
             "VALUES (" +
             "#{number}," +
@@ -32,6 +33,7 @@ public interface IhcsMapper {
             "#{time}," +
             "#{remark}," +
             "#{state}," +
+            "#{prj}," +
             "#{userid})")
     Integer insertOne(Ihcs ihcs);
 
@@ -43,6 +45,9 @@ public interface IhcsMapper {
             "time," +
             "remark," +
             "state," +
+            "prj," +
+            "results," +
+            "ismatch," +
             "confirm)" +
             "VALUES (" +
             "#{number}," +
@@ -52,6 +57,9 @@ public interface IhcsMapper {
             "#{time}," +
             "#{remark}," +
             "#{state}," +
+            "#{prj}," +
+            "#{results}," +
+            "#{ismatch}," +
             "#{confirm})")
     Integer importOne(Ihcs ihcs);
 
@@ -64,8 +72,9 @@ public interface IhcsMapper {
             Integer i = 0;
             String s = "";
             Timestamp ts = null;
-            if ((i = ihcs.getNumber()) != 0) {
-                sql += "number = " + i + ", ";
+            s = ihcs.getNumber();
+            if (s != null) {
+                sql += "number = '" + s + "', ";
             }
             if ((i = ihcs.getSon()) != 0) {
                 sql += "son = " + i + ", ";
@@ -73,7 +82,8 @@ public interface IhcsMapper {
             if ((i = ihcs.getTotal()) != 0) {
                 sql += "total = " + i + ", ";
             }
-            if (!(s = ihcs.getItem()).equals("")) {
+            s = ihcs.getItem();
+            if (s != null) {
                 sql += "item = '" + s + "', ";
             }
             if (!(ts = ihcs.getTime()).equals(null)) {
@@ -84,20 +94,21 @@ public interface IhcsMapper {
                 sql += "remark = '" + s + "', ";
             }
             sql += "state = " + ihcs.getState() + ", ";
+            sql += "ismatch = " + ihcs.getIsmatch() + ", ";
             sql += "userid = " + ihcs.getUserid();
 //            sql = sql.substring(0, sql.lastIndexOf(","));
             sql += " where id = " + ihcs.getId();
             return sql;
         }
 
-        public String select(String begin, String end, int searchNo) {
+        public String select(String begin, String end, String searchNo) {
             String sql = "select * from ihcs where state = 1 ";
             if (begin != "" && end != "") {
                 sql += "and time >= '" + begin + "' and time <= '" + end + "' ";
-                if (searchNo != 0) {
+                if (searchNo != null) {
                     sql += "and number like '%" + searchNo + "%'";
                 }
-            } else if (searchNo != 0) {
+            } else if (searchNo != null) {
                 sql += "and number like '%" + searchNo + "%'";
             }
             return sql;
