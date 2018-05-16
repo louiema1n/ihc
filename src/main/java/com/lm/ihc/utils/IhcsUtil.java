@@ -52,11 +52,11 @@ public class IhcsUtil {
     }
 
     /**
-     * 获取具体细项
+     * 获取具体细项-广州
      * @param result
      * @return
      */
-    public static String getItems(String result) {
+    public static String getGZItems(String result) {
         Pattern pattern = Pattern.compile("((免疫组化：|免疫荧光：|特殊染色：|免疫组化:|免疫荧光:|特殊染色:)(\\S+[、|, |，]+)*(\\w| |/|-*\\w+)+)(\\S+[、|, |，]+)*(\\w| |/|-*\\w+)+");
         Matcher matcher = pattern.matcher(result);
         while (matcher.find()) {
@@ -67,5 +67,14 @@ public class IhcsUtil {
             return str;
         }
         return null;
+    }
+
+    /**
+     * 获取具体细项-贵阳
+     * @param result
+     * @return
+     */
+    public static String getGYItems(String result) {
+        return result.substring(result.lastIndexOf("\n") + 1);
     }
 }

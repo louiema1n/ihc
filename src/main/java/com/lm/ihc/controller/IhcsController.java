@@ -169,7 +169,7 @@ public class IhcsController {
                     }
                     results = row.getCell(resultsIndex).getStringCellValue().trim();// 诊断意见
                     ihcs.setResults(results);
-                    String formatResult = IhcsUtil.getItems(results);
+                    String formatResult = IhcsUtil.getGYItems(results);
                     ihcs.setIsmatch(true);
                     if (formatResult == null || formatResult.equals("")) {
                         // 未匹配到
