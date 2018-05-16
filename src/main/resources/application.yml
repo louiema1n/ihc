@@ -13,4 +13,4 @@ spring:
     static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/json/,classpath:/public/,file:${web.printTablePath}
 #  启动模式（java -jar ihc-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev）
   profiles:
-    active: dev
+    active: prd
