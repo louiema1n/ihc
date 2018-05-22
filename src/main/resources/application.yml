@@ -3,8 +3,9 @@ server:
 web:
   printTablePath: C:/Program Files (x86)/SMF/Files/
 #  子公司代码
-sub-code:
-  guizhou: K2011011
+sub:
+  name: guizhou
+  code: K2011011
 spring:
   mvc:
     static-path-pattern: /**

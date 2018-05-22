@@ -35,8 +35,11 @@ public class IhcsController {
     @Value("${web.printTablePath}")
     private String printTablePath;
 
-    @Value("${sub-code.guizhou}")
-    private String GUIZHOU;
+    @Value("${sub.name}")
+    private String SUBNAME;
+
+    @Value("${sub.code}")
+    private String SUBCODE;
 
     @CrossOrigin
     @RequestMapping(value = "/all", method = RequestMethod.GET)
@@ -72,7 +75,7 @@ public class IhcsController {
         // 格式化数据
         String result = printData.substring(11, printData.length() - 2);
         // 转换js中的CODE
-        result = result.replaceAll("CODE", GUIZHOU);
+        result = result.replaceAll("CODE", SUBCODE);
         // 转换js中的\r\n，Java中正则表达式\\\\代表\\,\\代表\
         result = result.replaceAll("\\\\r\\\\n", "\r\n");
         // 导出到指定文件
@@ -169,7 +172,15 @@ public class IhcsController {
                     }
                     results = row.getCell(resultsIndex).getStringCellValue().trim();// 诊断意见
                     ihcs.setResults(results);
-                    String formatResult = IhcsUtil.getGYItems(results);
+                    String formatResult = null;
+                    switch (SUBNAME) {
+                        case "guiyang":
+                            formatResult = IhcsUtil.getGYItems(results);
+                            break;
+                        case "guangzhou":
+                            formatResult = IhcsUtil.getGZItems(results);
+                            break;
+                    }
                     ihcs.setIsmatch(true);
                     if (formatResult == null || formatResult.equals("")) {
                         // 未匹配到
