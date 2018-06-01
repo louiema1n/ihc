@@ -1,7 +1,7 @@
 server:
   port: 80
 web:
-  printTablePath: D:/Program Files (x86)/SMF/Files/
+  printTablePath: C:/Program Files (x86)/smf/files/
 #  子公司代码
 sub:
   name: guangzhou

@@ -144,61 +144,64 @@ public class IhcsController {
                         continue;
                     }
                     prjName = row.getCell(prjNameIndex).getStringCellValue();
-                    // 创建对象
-                    ihcs = new Ihcs();
-
-                    ihcs.setPrj(prjName);   // 项目名称
-
-                    testNo = row.getCell(testNoIndex).getStringCellValue();    // 蜡块编号
-                    // 格式化蜡块编号
-                    ihcs.setNumber(IhcsUtil.getNumber(testNo));
-                    ihcs.setSon(IhcsUtil.getSon(testNo));
-
-                    ihcs.setTime(Timestamp.valueOf(row.getCell(timeIndex).getStringCellValue()));// 确认加做时间
-
-                    userNick = row.getCell(userNickIndex).getStringCellValue();// 确认加做人
-                    // 设置确认加做人
-                    ihcs.setConfirm(userNick);
-
-                    int total = 0;  // 细项数
-
                     if (prjName.lastIndexOf("免疫组化") >= 0
                             || prjName.lastIndexOf("免疫荧光") >= 0
                             || prjName.lastIndexOf("特殊染色") >= 0) {
+                        // 创建对象
+                        ihcs = new Ihcs();
+
+                        ihcs.setPrj(prjName);   // 项目名称
+
+                        testNo = row.getCell(testNoIndex).getStringCellValue();    // 蜡块编号
+                        // 格式化蜡块编号
+                        ihcs.setNumber(IhcsUtil.getNumber(testNo));
+                        ihcs.setSon(IhcsUtil.getSon(testNo));
+
+                        ihcs.setTime(Timestamp.valueOf(row.getCell(timeIndex).getStringCellValue()));// 确认加做时间
+
+                        userNick = row.getCell(userNickIndex).getStringCellValue();// 确认加做人
+                        // 设置确认加做人
+                        ihcs.setConfirm(userNick);
+
+                        int total = 0;  // 细项数
 
                         total = new IhcsUtil().formatTotal(prjName, "[^0-9]");
+                        if (total == 0) {
+                            total = new IhcsUtil().formatTotal(prjName, "[^一|二|三|四|五|六|七|八|九|十]");
+                        }
                         total = (total == 16672 ? 2 : total);
                         ihcs.setTotal(total);   // 项目数
-                    }
-                    results = row.getCell(resultsIndex).getStringCellValue().trim();// 诊断意见
-                    ihcs.setResults(results);
-                    String formatResult = null;
-                    switch (SUBNAME) {
-                        case "guiyang":
-                            formatResult = IhcsUtil.getGYItems(results);
-                            break;
-                        case "guangzhou":
-                            formatResult = IhcsUtil.getGZItems(results);
-                            break;
-                    }
-                    ihcs.setIsmatch(true);
-                    if (formatResult == null || formatResult.equals("")) {
-                        // 未匹配到
-                        ihcs.setIsmatch(false);
-                    } else {
-                        String[] strings = formatResult.split("、");
-                        if (strings.length != total) {
-                            // 匹配不正确
-                            ihcs.setIsmatch(false);
+                        results = row.getCell(resultsIndex).getStringCellValue().trim();// 诊断意见
+                        ihcs.setResults(results);
+                        String formatResult = null;
+                        switch (SUBNAME) {
+                            case "guiyang":
+                                formatResult = IhcsUtil.getGYItems(results);
+                                break;
+                            case "guangzhou":
+                                formatResult = IhcsUtil.getGZItems(results);
+                                break;
                         }
+                        ihcs.setIsmatch(true);
+                        if (formatResult == null || formatResult.equals("")) {
+                            // 未匹配到
+                            ihcs.setIsmatch(false);
+                        } else {
+                            String[] strings = formatResult.split("、");
+                            if (strings.length != total) {
+                                // 匹配不正确
+                                ihcs.setIsmatch(false);
+                            }
+                        }
+                        ihcs.setItem(formatResult);
+
+                        // 默认正常
+                        ihcs.setState(true);
+
+                        // 添加到集合
+                        ihcsList.add(ihcs);
                     }
-                    ihcs.setItem(formatResult);
 
-                    // 默认正常
-                    ihcs.setState(true);
-
-                    // 添加到集合
-                    ihcsList.add(ihcs);
                 }
                 // 导入数据库
                 for (Ihcs ihc : ihcsList) {

@@ -18,10 +18,10 @@ public class IhcsUtil {
         pattern = Pattern.compile(reg);
         matcher = pattern.matcher(prjName);
         result = matcher.replaceAll("").trim();
-        if ((result.equals("") || result == null) && !flag) {
-            formatTotal(prjName, "[^一|二|三|四|五|六|七|八|九|十]");
-            flag = true;
+        if ((result.equals("") || result == null)) {
+            return 0;
         }
+
         String[] regs = {"一", "二", "三", "四", "五", "六", "七", "八", "九", "十"};
         for (int i = 0; i < regs.length; i++) {
             if (result.equals(regs[i])) {
