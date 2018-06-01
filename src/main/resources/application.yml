@@ -1,10 +1,10 @@
 server:
   port: 80
 web:
-  printTablePath: C:/Program Files (x86)/SMF/Files/
+  printTablePath: D:/Program Files (x86)/SMF/Files/
 #  子公司代码
 sub:
-  name: guizhou
+  name: guangzhou
   code: K2011011
 spring:
   mvc:
