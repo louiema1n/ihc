@@ -20,6 +20,15 @@ public class Ihcs {
     private String prj;
     private String results;
     private Boolean ismatch;
+    private String doctor;
+
+    public String getDoctor() {
+        return doctor;
+    }
+
+    public void setDoctor(String doctor) {
+        this.doctor = doctor;
+    }
 
     public Boolean getIsmatch() {
         return ismatch;
