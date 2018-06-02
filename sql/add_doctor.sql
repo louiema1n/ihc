@@ -1,0 +1,1 @@
+ALTER TABLE ihcs ADD doctor varchar(255) NULL COMMENT '病理医生';
