@@ -5,7 +5,7 @@ web:
 #  子公司代码
 sub:
   name: guangzhou
-  code: K2011011
+  code: K010101001
 spring:
   mvc:
     static-path-pattern: /**
