@@ -21,6 +21,15 @@ public class Ihcs {
     private String results;
     private Boolean ismatch;
     private String doctor;
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getDoctor() {
         return doctor;

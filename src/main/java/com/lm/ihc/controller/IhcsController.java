@@ -113,8 +113,8 @@ public class IhcsController {
                 List<Ihcs> ihcsList = new ArrayList<>();
                 XSSFRow row;
                 Ihcs ihcs;
-                String prjName, testNo, userNick, results, doctor;
-                int prjNameIndex = 0, testNoIndex = 0, timeIndex = 0, userNickIndex = 0, resultsIndex = 0, doctorIndex = 0;
+                String prjName, testNo, userNick, results, name;
+                int prjNameIndex = 0, testNoIndex = 0, timeIndex = 0, userNickIndex = 0, resultsIndex = 0, doctorIndex = 0, nameIndex = 0;
                 for (int i = 3; i < sheet.getLastRowNum() - 1; i++) {
                     // 获取row
                     row = sheet.getRow(i);
@@ -142,6 +142,9 @@ public class IhcsController {
                                 case "批准人":
                                     doctorIndex = j;
                                     break;
+                                case "病人姓名":
+                                    nameIndex = j;
+                                    break;
                             }
                         }
                         continue;
@@ -156,6 +159,8 @@ public class IhcsController {
                         ihcs.setPrj(prjName);   // 项目名称
 
                         ihcs.setDoctor(row.getCell(doctorIndex).getStringCellValue());   // 批准人-病理医生
+
+                        ihcs.setName(row.getCell(nameIndex).getStringCellValue());   // 病人姓名
 
                         testNo = row.getCell(testNoIndex).getStringCellValue();    // 蜡块编号
                         // 格式化蜡块编号
