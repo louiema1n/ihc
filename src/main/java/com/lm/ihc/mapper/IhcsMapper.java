@@ -24,6 +24,7 @@ public interface IhcsMapper {
             "remark," +
             "state," +
             "prj," +
+            "doctor," +
             "userid)" +
             "VALUES (" +
             "#{number}," +
@@ -34,6 +35,7 @@ public interface IhcsMapper {
             "#{remark}," +
             "#{state}," +
             "#{prj}," +
+            "#{doctor}," +
             "#{userid})")
     Integer insertOne(Ihcs ihcs);
 
@@ -70,7 +72,7 @@ public interface IhcsMapper {
     @UpdateProvider(type = IhcsDaoProvider.class, method = "upd")
     Integer updOne(Ihcs ihcs);
 
-    class IhcsDaoProvider{
+    class IhcsDaoProvider {
         public String upd(Ihcs ihcs) {
             String sql = "UPDATE ihcs SET ";
             Integer i = 0;
@@ -93,9 +95,13 @@ public interface IhcsMapper {
             if (!(ts = ihcs.getTime()).equals(null)) {
                 sql += "time = '" + ts + "', ";
             }
-            s= ihcs.getRemark();
+            s = ihcs.getRemark();
             if (s != null) {
                 sql += "remark = '" + s + "', ";
+            }
+            s = ihcs.getDoctor();
+            if (s != null) {
+                sql += "doctor = '" + s + "', ";
             }
             sql += "state = " + ihcs.getState() + ", ";
             sql += "ismatch = " + ihcs.getIsmatch() + ", ";
