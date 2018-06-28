@@ -38,7 +38,7 @@ public class IhcsUtil {
      * @return
      */
     public static String getNumber(String testNo) {
-        return testNo.substring(0, testNo.length() - 3);
+        return testNo.substring(0, testNo.lastIndexOf("-"));
     }
 
     /**
@@ -46,9 +46,8 @@ public class IhcsUtil {
      * @param testNo
      * @return
      */
-    public static int getSon(String testNo) {
-        String son = testNo.substring(testNo.length() - 2);
-        return Integer.parseInt(son);
+    public static String getSon(String testNo) {
+        return testNo.substring(testNo.lastIndexOf("-"), testNo.length());
     }
 
     /**

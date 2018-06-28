@@ -10,7 +10,7 @@ public class Ihcs {
 
     private int id;
     private String number;
-    private int son;
+    private String son;
     private int total;
     private Timestamp time;
     private String timeP;
@@ -116,11 +116,11 @@ public class Ihcs {
         this.number = number;
     }
 
-    public int getSon() {
+    public String getSon() {
         return son;
     }
 
-    public void setSon(int son) {
+    public void setSon(String son) {
         this.son = son;
     }
 

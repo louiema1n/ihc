@@ -4,6 +4,8 @@ import com.lm.ihc.domain.Ihcs;
 import com.lm.ihc.service.IhcsService;
 import com.lm.ihc.service.UserService;
 import com.lm.ihc.utils.IhcsUtil;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -116,9 +118,18 @@ public class IhcsController {
                 String prjName, testNo, userNick, results, name;
                 int prjNameIndex = 0, testNoIndex = 0, timeIndex = 0, userNickIndex = 0, resultsIndex = 0, doctorIndex = 0, nameIndex = 0;
                 int total = 0;  // 细项数
-                boolean flag = false;
                 boolean other = false;
-                for (int i = 3; i < sheet.getPhysicalNumberOfRows(); i++) {
+                // 判断是否页尾
+                int rows1 = sheet.getPhysicalNumberOfRows();
+                int rows2 = sheet.getLastRowNum();
+                int rows;
+                XSSFRow row2 = sheet.getRow(rows2 - 1);
+                if (row2.getCell(0) == null) {
+                    rows = rows2 - 1;
+                } else {
+                    rows = rows1;
+                }
+                for (int i = 3; i < rows; i++) {
                     // 获取row
                     row = sheet.getRow(i);
 
@@ -132,7 +143,6 @@ public class IhcsController {
                                     break;
                                 case "细项数":
                                     prjNameIndex = j;
-                                    flag = true;
                                     break;
                                 case "蜡块编号":
                                     testNoIndex = j;
@@ -164,70 +174,66 @@ public class IhcsController {
                         continue;
                     }
                     prjName = row.getCell(prjNameIndex).getStringCellValue();
-                    if (prjName.lastIndexOf("免疫组化") >= 0
-                            || prjName.lastIndexOf("免疫荧光") >= 0
-                            || prjName.lastIndexOf("特殊染色") >= 0 || flag) {
-                        // 创建对象
-                        ihcs = new Ihcs();
 
-                        ihcs.setPrj(prjName);   // 项目名称
+                    // 创建对象
+                    ihcs = new Ihcs();
 
-                        ihcs.setDoctor(row.getCell(doctorIndex).getStringCellValue());   // 批准人-病理医生
+                    ihcs.setPrj(prjName);   // 项目名称
 
-                        ihcs.setName(row.getCell(nameIndex).getStringCellValue());   // 病人姓名
+                    ihcs.setDoctor(row.getCell(doctorIndex).getStringCellValue());   // 批准人-病理医生
 
-                        testNo = row.getCell(testNoIndex).getStringCellValue();    // 蜡块编号
-                        // 格式化蜡块编号
-                        ihcs.setNumber(IhcsUtil.getNumber(testNo));
-                        ihcs.setSon(IhcsUtil.getSon(testNo));
+                    ihcs.setName(row.getCell(nameIndex).getStringCellValue());   // 病人姓名
 
-                        ihcs.setTime(Timestamp.valueOf(row.getCell(timeIndex).getStringCellValue()));// 确认加做时间
+                    testNo = row.getCell(testNoIndex).getStringCellValue();    // 蜡块编号
+                    // 格式化蜡块编号
+                    ihcs.setNumber(IhcsUtil.getNumber(testNo));
+                    ihcs.setSon(IhcsUtil.getSon(testNo));
 
-                        userNick = row.getCell(userNickIndex).getStringCellValue();// 确认加做人
-                        // 设置确认加做人
-                        ihcs.setConfirm(userNick);
+                    ihcs.setTime(Timestamp.valueOf(row.getCell(timeIndex).getStringCellValue()));// 确认加做时间
 
-                        total = new IhcsUtil().formatTotal(prjName, "[^0-9]");
-                        if (total == 0) {
-                            total = new IhcsUtil().formatTotal(prjName, "[^一|二|三|四|五|六|七|八|九|十]");
-                        }
-                        total = (total == 16672 ? 2 : total);
-                        ihcs.setTotal(total);   // 项目数
-                        results = row.getCell(resultsIndex).getStringCellValue().trim();// 诊断意见
-                        ihcs.setResults(results);
-                        String formatResult = null;
-                        if (other) {
-                            formatResult = results;
-                        } else {
-                            switch (SUBNAME) {
-                                case "guiyang":
-                                    formatResult = IhcsUtil.getGYItems(results);
-                                    break;
-                                case "guangzhou":
-                                    formatResult = IhcsUtil.getGZItems(results);
-                                    break;
-                            }
-                        }
-                        ihcs.setIsmatch(true);
-                        if (formatResult == null || formatResult.equals("")) {
-                            // 未匹配到
-                            ihcs.setIsmatch(false);
-                        } else {
-                            String[] strings = formatResult.split("、");
-                            if (strings.length != total) {
-                                // 匹配不正确
-                                ihcs.setIsmatch(false);
-                            }
-                        }
-                        ihcs.setItem(formatResult);
+                    userNick = row.getCell(userNickIndex).getStringCellValue();// 确认加做人
+                    // 设置确认加做人
+                    ihcs.setConfirm(userNick);
 
-                        // 默认正常
-                        ihcs.setState(true);
-
-                        // 添加到集合
-                        ihcsList.add(ihcs);
+                    total = new IhcsUtil().formatTotal(prjName, "[^0-9]");
+                    if (total == 0) {
+                        total = new IhcsUtil().formatTotal(prjName, "[^一|二|三|四|五|六|七|八|九|十]");
                     }
+                    total = (total == 16672 ? 2 : total);
+                    ihcs.setTotal(total);   // 项目数
+                    results = row.getCell(resultsIndex).getStringCellValue().trim();// 诊断意见
+                    ihcs.setResults(results);
+                    String formatResult = null;
+                    if (other) {
+                        formatResult = results;
+                    } else {
+                        switch (SUBNAME) {
+                            case "guiyang":
+                                formatResult = IhcsUtil.getGYItems(results);
+                                break;
+                            case "guangzhou":
+                                formatResult = IhcsUtil.getGZItems(results);
+                                break;
+                        }
+                    }
+                    ihcs.setIsmatch(true);
+                    if (formatResult == null || formatResult.equals("")) {
+                        // 未匹配到
+                        ihcs.setIsmatch(false);
+                    } else {
+                        String[] strings = formatResult.split("、");
+                        if (strings.length != total) {
+                            // 匹配不正确
+                            ihcs.setIsmatch(false);
+                        }
+                    }
+                    ihcs.setItem(formatResult);
 
+                    // 默认正常
+                    ihcs.setState(true);
+
+                    // 添加到集合
+                    ihcsList.add(ihcs);
                 }
                 // 导入数据库
                 for (Ihcs ihc : ihcsList) {
