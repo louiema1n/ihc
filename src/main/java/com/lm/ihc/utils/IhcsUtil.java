@@ -47,7 +47,7 @@ public class IhcsUtil {
      * @return
      */
     public static String getSon(String testNo) {
-        return testNo.substring(testNo.lastIndexOf("-"), testNo.length());
+        return testNo.substring(testNo.lastIndexOf("-") + 1, testNo.length());
     }
 
     /**
