@@ -115,8 +115,8 @@ public class IhcsController {
                 List<Ihcs> ihcsList = new ArrayList<>();
                 XSSFRow row;
                 Ihcs ihcs;
-                String prjName, testNo, userNick, results, name;
-                int prjNameIndex = 0, testNoIndex = 0, timeIndex = 0, userNickIndex = 0, resultsIndex = 0, doctorIndex = 0, nameIndex = 0;
+                String prjName = null, testNo, userNick, results, name;
+                int prjNameIndex = 0, testNoIndex = 0, timeIndex = 0, userNickIndex = 0, resultsIndex = 0, doctorIndex = 0, nameIndex = 0, itemTotalIndex = 0;
                 int total = 0;  // 细项数
                 boolean other = false;
                 // 判断是否页尾
@@ -142,7 +142,7 @@ public class IhcsController {
                                     prjNameIndex = j;
                                     break;
                                 case "细项数":
-                                    prjNameIndex = j;
+                                    itemTotalIndex = j;
                                     break;
                                 case "蜡块编号":
                                     testNoIndex = j;
@@ -173,11 +173,12 @@ public class IhcsController {
                         }
                         continue;
                     }
-                    prjName = row.getCell(prjNameIndex).getStringCellValue();
-
                     // 创建对象
                     ihcs = new Ihcs();
 
+                    if (prjNameIndex != 0) {
+                        prjName = row.getCell(prjNameIndex).getStringCellValue();
+                    }
                     ihcs.setPrj(prjName);   // 项目名称
 
                     ihcs.setDoctor(row.getCell(doctorIndex).getStringCellValue());   // 批准人-病理医生
@@ -195,7 +196,12 @@ public class IhcsController {
                     // 设置确认加做人
                     ihcs.setConfirm(userNick);
 
-                    total = new IhcsUtil().formatTotal(prjName, "[^0-9]");
+                    // 模板取值
+                    if (itemTotalIndex != 0 && row.getCell(itemTotalIndex) != null) {
+                        total = (int) row.getCell(itemTotalIndex).getNumericCellValue();
+                        ihcs.setPrj(String.valueOf(total));   // 项目名称
+                    } else
+                        total = new IhcsUtil().formatTotal(prjName, "[^0-9]");
                     if (total == 0) {
                         total = new IhcsUtil().formatTotal(prjName, "[^一|二|三|四|五|六|七|八|九|十]");
                     }
