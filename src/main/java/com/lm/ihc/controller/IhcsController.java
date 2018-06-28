@@ -115,7 +115,10 @@ public class IhcsController {
                 Ihcs ihcs;
                 String prjName, testNo, userNick, results, name;
                 int prjNameIndex = 0, testNoIndex = 0, timeIndex = 0, userNickIndex = 0, resultsIndex = 0, doctorIndex = 0, nameIndex = 0;
-                for (int i = 3; i < sheet.getLastRowNum() - 1; i++) {
+                int total = 0;  // 细项数
+                boolean flag = false;
+                boolean other = false;
+                for (int i = 3; i < sheet.getPhysicalNumberOfRows(); i++) {
                     // 获取row
                     row = sheet.getRow(i);
 
@@ -126,6 +129,10 @@ public class IhcsController {
                             switch (row.getCell(j).getStringCellValue()) {
                                 case "项目名称":
                                     prjNameIndex = j;
+                                    break;
+                                case "细项数":
+                                    prjNameIndex = j;
+                                    flag = true;
                                     break;
                                 case "蜡块编号":
                                     testNoIndex = j;
@@ -139,7 +146,14 @@ public class IhcsController {
                                 case "诊断意见":
                                     resultsIndex = j;
                                     break;
+                                case "项目明细":
+                                    resultsIndex = j;
+                                    other = true;
+                                    break;
                                 case "批准人":
+                                    doctorIndex = j;
+                                    break;
+                                case "病理医生":
                                     doctorIndex = j;
                                     break;
                                 case "病人姓名":
@@ -152,7 +166,7 @@ public class IhcsController {
                     prjName = row.getCell(prjNameIndex).getStringCellValue();
                     if (prjName.lastIndexOf("免疫组化") >= 0
                             || prjName.lastIndexOf("免疫荧光") >= 0
-                            || prjName.lastIndexOf("特殊染色") >= 0) {
+                            || prjName.lastIndexOf("特殊染色") >= 0 || flag) {
                         // 创建对象
                         ihcs = new Ihcs();
 
@@ -173,8 +187,6 @@ public class IhcsController {
                         // 设置确认加做人
                         ihcs.setConfirm(userNick);
 
-                        int total = 0;  // 细项数
-
                         total = new IhcsUtil().formatTotal(prjName, "[^0-9]");
                         if (total == 0) {
                             total = new IhcsUtil().formatTotal(prjName, "[^一|二|三|四|五|六|七|八|九|十]");
@@ -184,13 +196,17 @@ public class IhcsController {
                         results = row.getCell(resultsIndex).getStringCellValue().trim();// 诊断意见
                         ihcs.setResults(results);
                         String formatResult = null;
-                        switch (SUBNAME) {
-                            case "guiyang":
-                                formatResult = IhcsUtil.getGYItems(results);
-                                break;
-                            case "guangzhou":
-                                formatResult = IhcsUtil.getGZItems(results);
-                                break;
+                        if (other) {
+                            formatResult = results;
+                        } else {
+                            switch (SUBNAME) {
+                                case "guiyang":
+                                    formatResult = IhcsUtil.getGYItems(results);
+                                    break;
+                                case "guangzhou":
+                                    formatResult = IhcsUtil.getGZItems(results);
+                                    break;
+                            }
                         }
                         ihcs.setIsmatch(true);
                         if (formatResult == null || formatResult.equals("")) {
