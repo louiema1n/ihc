@@ -38,7 +38,12 @@ public class IhcsUtil {
      * @return
      */
     public static String getNumber(String testNo) {
-        return testNo.substring(0, testNo.lastIndexOf("-"));
+        String str = testNo;
+        int index = testNo.lastIndexOf("-");
+        if (index > -1) {
+            str = testNo.substring(0, index);
+        }
+        return str;
     }
 
     /**
@@ -47,7 +52,14 @@ public class IhcsUtil {
      * @return
      */
     public static String getSon(String testNo) {
-        return testNo.substring(testNo.lastIndexOf("-") + 1, testNo.length());
+        String str;
+        int index = testNo.lastIndexOf("-");
+        if (index > -1) {
+            str = testNo.substring(index + 1, testNo.length());
+            return str;
+        } else {
+            return "01";
+        }
     }
 
     /**
