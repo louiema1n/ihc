@@ -190,7 +190,16 @@ public class IhcsController {
                     ihcs.setNumber(IhcsUtil.getNumber(testNo));
                     ihcs.setSon(IhcsUtil.getSon(testNo));
 
-                    ihcs.setTime(Timestamp.valueOf(row.getCell(timeIndex).getStringCellValue()));// 确认加做时间
+                    // 处理确认加做时间格式为2018-7-5
+                    String time = row.getCell(timeIndex).getStringCellValue();
+                    Timestamp timestamp;
+                    try {
+                        timestamp = Timestamp.valueOf(time);
+                    } catch (IllegalArgumentException e) {
+                        e.printStackTrace();
+                        timestamp = Timestamp.valueOf(time + " 00:00:00");
+                    }
+                    ihcs.setTime(timestamp);// 确认加做时间
 
                     userNick = row.getCell(userNickIndex).getStringCellValue();// 确认加做人
                     // 设置确认加做人
