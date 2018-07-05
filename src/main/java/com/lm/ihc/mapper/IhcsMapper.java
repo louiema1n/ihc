@@ -84,7 +84,7 @@ public interface IhcsMapper {
             }
             s = ihcs.getSon();
             if (s != null) {
-                sql += "son = '" + i + "', ";
+                sql += "son = '" + s + "', ";
             }
             if ((i = ihcs.getTotal()) != 0) {
                 sql += "total = " + i + ", ";
