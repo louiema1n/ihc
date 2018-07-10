@@ -124,7 +124,7 @@ public class IhcsController {
                 int rows2 = sheet.getLastRowNum();
                 int rows;
                 XSSFRow row2 = sheet.getRow(rows2 - 1);
-                if (row2.getCell(0) == null) {
+                if (row2.getCell(2) == null) {
                     rows = rows2 - 1;
                 } else {
                     rows = rows1;
