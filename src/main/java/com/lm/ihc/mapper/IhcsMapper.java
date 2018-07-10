@@ -122,7 +122,8 @@ public interface IhcsMapper {
             } else if (searchNo != null) {
                 sql += "and number like '%" + searchNo + "%'";
             }
-            return sql + " order by doctor asc , number asc ";
+//            return sql + " order by doctor asc , number asc ";
+            return sql + " order by number asc ";
         }
     }
 }
