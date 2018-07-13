@@ -11,6 +11,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -115,7 +116,7 @@ public class IhcsController {
                 List<Ihcs> ihcsList = new ArrayList<>();
                 XSSFRow row;
                 Ihcs ihcs;
-                String prjName = null, testNo, userNick, results, name;
+                String prjName = null, testNo = null, userNick = null, results, name;
                 int prjNameIndex = 0, testNoIndex = 0, timeIndex = 0, userNickIndex = 0, resultsIndex = 0, doctorIndex = 0, nameIndex = 0, itemTotalIndex = 0;
                 int total = 0;  // 细项数
                 boolean other = false;
@@ -176,38 +177,83 @@ public class IhcsController {
                     // 创建对象
                     ihcs = new Ihcs();
 
-                    if (prjNameIndex != 0) {
-                        prjName = row.getCell(prjNameIndex).getStringCellValue();
-                    }
-                    ihcs.setPrj(prjName);   // 项目名称
-
-                    ihcs.setDoctor(row.getCell(doctorIndex).getStringCellValue());   // 批准人-病理医生
-
-                    ihcs.setName(row.getCell(nameIndex).getStringCellValue());   // 病人姓名
-
                     try {
                         testNo = row.getCell(testNoIndex).getStringCellValue();    // 蜡块编号
                     } catch (IllegalStateException e) {
                         // 取消科学计数法
                         testNo = String.format("%.0f", row.getCell(testNoIndex).getNumericCellValue());    // 蜡块编号
-                        e.printStackTrace();
+                        System.out.println("第" + (i + 1) + "行[蜡块编号]数据格式错误，已尝试更换读取方式，成功！");
+                    } catch (NullPointerException e) {
+                        System.out.println("第" + (i + 1) + "行[蜡块编号]为空，直接跳到下一行！当前行不导入！[蜡块编号不能为空]");
+                        break;
                     }
+                    if (testNo == null || StringUtils.isEmpty(testNo) || testNo.equals(0)) {
+                        System.out.println("第" + (i + 1) + "行[蜡块编号]为空，直接跳到下一行！当前行不导入！[蜡块编号不能为空]");
+                        break;
+                    }
+
+                    if (prjNameIndex != 0) {
+                        try {
+                            prjName = row.getCell(prjNameIndex).getStringCellValue();
+                        } catch (NullPointerException e) {
+                            // 为空
+                            System.out.println("第" + (i + 1) + "行[项目名称]为空，请注意修改！");
+                        } catch (IllegalStateException e) {
+                            // POI读取格式错误
+                            prjName = String.valueOf(row.getCell(prjNameIndex).getNumericCellValue());
+                            System.out.println("第" + i + "行[项目名称]数据格式错误，已尝试更换读取方式，成功！");
+                        }
+                    }
+                    ihcs.setPrj(prjName);   // 项目名称
+
+                    String doctor = null;
+                    try {
+                        doctor = row.getCell(doctorIndex).getStringCellValue();
+                    } catch (NullPointerException e) {
+                        System.out.println("第" + (i + 1) + "行[病理医生]为空，请注意修改！");
+                    } catch (IllegalStateException e) {
+                        doctor = String.valueOf(row.getCell(doctorIndex).getNumericCellValue());
+                        System.out.println("第" + (i + 1) + "行[病理医生]数据格式错误，已尝试更换读取方式，成功！");
+                    }
+                    ihcs.setDoctor(doctor);   // 批准人-病理医生
+
+                    String names = null;
+                    try {
+                        names = row.getCell(nameIndex).getStringCellValue();
+                    } catch (NullPointerException e) {
+                        System.out.println("第" + (i + 1) + "行[病人姓名]为空，请注意修改！");
+                    } catch (IllegalStateException e) {
+                        names = String.valueOf(row.getCell(nameIndex).getNumericCellValue());
+                        System.out.println("第" + (i + 1) + "行[病人姓名]数据格式错误，已尝试更换读取方式，成功！");
+                    }
+                    ihcs.setName(names);   // 病人姓名
+
                     // 格式化蜡块编号
                     ihcs.setNumber(IhcsUtil.getNumber(testNo));
                     ihcs.setSon(IhcsUtil.getSon(testNo));
 
                     // 处理确认加做时间格式为2018-7-5
-                    String time = row.getCell(timeIndex).getStringCellValue();
-                    Timestamp timestamp;
+                    String time = null;
+                    Timestamp timestamp = null;
                     try {
+                        time = row.getCell(timeIndex).getStringCellValue();
                         timestamp = Timestamp.valueOf(time);
                     } catch (IllegalArgumentException e) {
-                        e.printStackTrace();
                         timestamp = Timestamp.valueOf(time + " 00:00:00");
+                        System.out.println("第" + (i + 1) + "行[确认加做时间]数据格式错误，已尝试更换读取方式，成功！");
+                    } catch (NullPointerException e) {
+                        System.out.println("第" + (i + 1) + "行[确认加做时间]为空，请注意修改！");
                     }
                     ihcs.setTime(timestamp);// 确认加做时间
 
-                    userNick = row.getCell(userNickIndex).getStringCellValue();// 确认加做人
+                    try {
+                        userNick = row.getCell(userNickIndex).getStringCellValue();// 确认加做人
+                    } catch (IllegalArgumentException e) {
+                        userNick = String.valueOf(row.getCell(userNickIndex).getNumericCellValue());// 确认加做人
+                        System.out.println("第" + (i + 1) + "行[确认加做人]数据格式错误，已尝试更换读取方式，成功！");
+                    } catch (NullPointerException e) {
+                        System.out.println("第" + (i + 1) + "行[确认加做人]为空，请注意修改！");
+                    }
                     // 设置确认加做人
                     ihcs.setConfirm(userNick);
 
@@ -255,6 +301,7 @@ public class IhcsController {
 
                     // 添加到集合
                     ihcsList.add(ihcs);
+
                 }
                 // 导入数据库
                 for (Ihcs ihc : ihcsList) {
