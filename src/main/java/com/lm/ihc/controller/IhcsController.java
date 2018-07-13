@@ -185,7 +185,12 @@ public class IhcsController {
 
                     ihcs.setName(row.getCell(nameIndex).getStringCellValue());   // 病人姓名
 
-                    testNo = row.getCell(testNoIndex).getStringCellValue();    // 蜡块编号
+                    try {
+                        testNo = row.getCell(testNoIndex).getStringCellValue();    // 蜡块编号
+                    } catch (IllegalStateException e) {
+                        testNo = String.valueOf(row.getCell(testNoIndex).getNumericCellValue());    // 蜡块编号
+                        e.printStackTrace();
+                    }
                     // 格式化蜡块编号
                     ihcs.setNumber(IhcsUtil.getNumber(testNo));
                     ihcs.setSon(IhcsUtil.getSon(testNo));
