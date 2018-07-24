@@ -116,8 +116,8 @@ public class IhcsController {
                 List<Ihcs> ihcsList = new ArrayList<>();
                 XSSFRow row;
                 Ihcs ihcs;
-                String prjName = null, testNo = null, userNick = null, results, name;
-                int prjNameIndex = 0, testNoIndex = 0, timeIndex = 0, userNickIndex = 0, resultsIndex = 0, doctorIndex = 0, nameIndex = 0, itemTotalIndex = 0;
+                String prjName = null, testNo = null, userNick = null, results, name, batch = null;
+                int prjNameIndex = 0, testNoIndex = 0, timeIndex = 0, userNickIndex = 0, resultsIndex = 0, doctorIndex = 0, nameIndex = 0, itemTotalIndex = 0, batchIndex = 0;
                 int total = 0;  // 细项数
                 boolean other = false;
                 // 判断是否页尾
@@ -169,6 +169,9 @@ public class IhcsController {
                                     break;
                                 case "病人姓名":
                                     nameIndex = j;
+                                    break;
+                                case "批次":
+                                    batchIndex = j;
                                     break;
                             }
                         }
@@ -247,15 +250,15 @@ public class IhcsController {
                     ihcs.setTime(timestamp);// 确认加做时间
 
                     try {
-                        userNick = row.getCell(userNickIndex).getStringCellValue();// 确认加做人
+                        batch = row.getCell(batchIndex).getStringCellValue();// 批次
                     } catch (IllegalArgumentException e) {
-                        userNick = String.valueOf(row.getCell(userNickIndex).getNumericCellValue());// 确认加做人
-                        System.out.println("第" + (i + 1) + "行[确认加做人]数据格式错误，已尝试更换读取方式，成功！");
+                        batch = String.valueOf(row.getCell(batchIndex).getNumericCellValue());// 批次
+                        System.out.println("第" + (i + 1) + "行[批次]数据格式错误，已尝试更换读取方式，成功！");
                     } catch (NullPointerException e) {
-                        System.out.println("第" + (i + 1) + "行[确认加做人]为空，请注意修改！");
+                        System.out.println("第" + (i + 1) + "行[批次]为空，请注意修改！");
                     }
                     // 设置确认加做人
-                    ihcs.setConfirm(userNick);
+                    ihcs.setBatch(batch);
 
                     // 模板取值
                     if (itemTotalIndex != 0 && row.getCell(itemTotalIndex) != null) {
@@ -295,6 +298,17 @@ public class IhcsController {
                         }
                     }
                     ihcs.setItem(formatResult);
+
+                    try {
+                        userNick = row.getCell(userNickIndex).getStringCellValue();// 确认加做人
+                    } catch (IllegalArgumentException e) {
+                        userNick = String.valueOf(row.getCell(userNickIndex).getNumericCellValue());// 确认加做人
+                        System.out.println("第" + (i + 1) + "行[确认加做人]数据格式错误，已尝试更换读取方式，成功！");
+                    } catch (NullPointerException e) {
+                        System.out.println("第" + (i + 1) + "行[确认加做人]为空，请注意修改！");
+                    }
+                    // 设置确认加做人
+                    ihcs.setConfirm(userNick);
 
                     // 默认正常
                     ihcs.setState(true);

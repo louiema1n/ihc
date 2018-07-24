@@ -52,6 +52,7 @@ public interface IhcsMapper {
             "ismatch," +
             "doctor," +
             "name," +
+            "batch," +
             "confirm)" +
             "VALUES (" +
             "#{number}," +
@@ -66,6 +67,7 @@ public interface IhcsMapper {
             "#{ismatch}," +
             "#{doctor}," +
             "#{name}," +
+            "#{batch}," +
             "#{confirm})")
     Integer importOne(Ihcs ihcs);
 

@@ -22,6 +22,15 @@ public class Ihcs {
     private Boolean ismatch;
     private String doctor;
     private String name;
+    private String batch;
+
+    public String getBatch() {
+        return batch;
+    }
+
+    public void setBatch(String batch) {
+        this.batch = batch;
+    }
 
     public String getName() {
         return name;
