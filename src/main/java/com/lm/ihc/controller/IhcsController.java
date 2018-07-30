@@ -245,7 +245,11 @@ public class IhcsController {
                         timestamp = Timestamp.valueOf(time + " 00:00:00");
                         System.out.println("第" + (i + 1) + "行[确认加做时间]数据格式错误，已尝试更换读取方式，成功！");
                     } catch (NullPointerException e) {
-                        System.out.println("第" + (i + 1) + "行[确认加做时间]为空，请注意修改！");
+                        timestamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
+                        System.out.println("第" + (i + 1) + "行[确认加做时间]为空，已默认为当前系统时间！");
+                    } catch (IllegalStateException e) {
+                        timestamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
+                        System.out.println("第" + (i + 1) + "行[确认加做时间]数据格式错误，已默认为当前系统时间！");
                     }
                     ihcs.setTime(timestamp);// 确认加做时间
 
