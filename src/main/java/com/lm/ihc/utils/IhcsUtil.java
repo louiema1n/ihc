@@ -39,7 +39,7 @@ public class IhcsUtil {
      */
     public static String getNumber(String testNo) {
         String str = testNo;
-        int index = testNo.lastIndexOf("-");
+        int index = testNo.indexOf("-");
         if (index > -1) {
             str = testNo.substring(0, index);
         }
@@ -53,7 +53,7 @@ public class IhcsUtil {
      */
     public static String getSon(String testNo) {
         String str;
-        int index = testNo.lastIndexOf("-");
+        int index = testNo.indexOf("-");
         if (index > -1) {
             str = testNo.substring(index + 1, testNo.length());
             return str;
