@@ -117,7 +117,16 @@ public class IhcsController {
                 XSSFRow row;
                 Ihcs ihcs;
                 String prjName = null, testNo = null, userNick = null, results, name, batch = null;
-                int prjNameIndex = 0, testNoIndex = 0, timeIndex = 0, userNickIndex = 0, resultsIndex = 0, doctorIndex = 0, nameIndex = 0, itemTotalIndex = 0, batchIndex = 0;
+                int prjNameIndex = 0,
+                        testNoIndex = 0,
+                        timeIndex = 0,
+                        userNickIndex = 0,
+                        resultsIndex = 0,
+                        doctorIndex = 0,
+                        nameIndex = 0,
+                        itemTotalIndex = 0,
+                        remarkIndex = 0,
+                        batchIndex = 0;
                 int total = 0;  // 细项数
                 boolean other = false;
                 // 判断是否页尾
@@ -148,6 +157,9 @@ public class IhcsController {
                                 case "蜡块编号":
                                     testNoIndex = j;
                                     break;
+                                case "病理号":
+                                    testNoIndex = j;
+                                    break;
                                 case "确认加做时间":
                                     timeIndex = j;
                                     break;
@@ -172,6 +184,9 @@ public class IhcsController {
                                     break;
                                 case "批次":
                                     batchIndex = j;
+                                    break;
+                                case "备注":
+                                    remarkIndex = j;
                                     break;
                             }
                         }
@@ -313,6 +328,17 @@ public class IhcsController {
                     }
                     // 设置确认加做人
                     ihcs.setConfirm(userNick);
+
+                    String remark = null;
+                    try {
+                        remark = row.getCell(remarkIndex).getStringCellValue();// 备注
+                    } catch (IllegalArgumentException e) {
+                        remark = String.valueOf(row.getCell(remarkIndex).getNumericCellValue());// 备注
+                        System.out.println("第" + (i + 1) + "行[备注]数据格式错误，已尝试更换读取方式，成功！");
+                    } catch (NullPointerException e) {
+                        System.out.println("第" + (i + 1) + "行[备注]为空，请注意修改！");
+                    }
+                    ihcs.setRemark(remark);
 
                     // 默认正常
                     ihcs.setState(true);
